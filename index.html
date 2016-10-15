@@ -1,5 +1,4 @@
-<html>
-
+<html
 <head>
 <meta charset=”utf-8? />
 <meta name=”format-detection” content=”telephone=no” />
@@ -10,7 +9,7 @@
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js"></script>
-<title>Cookie Clicker</title>
+<title id="title">Cookie Clicker</title>
 
 </head>
 
@@ -44,9 +43,15 @@
 		max-width:25%;
 		height:auto;
 	}
+	
+	img{
+		max-width:50px;
+		height:auto;
+		vertical-align: bottom;
+	}
 
 	.sCookie{
-		max-width:25%;
+		max-width:2.5%;
 		height:auto;
 	}
 	
@@ -66,24 +71,75 @@
 		padding: 10px;
 	}
 	
+	.button {
+		background-color: #4CAF50; /* Green */
+		border: none;
+		color: white;
+		padding: 16px 32px;
+		text-align: center;
+		text-decoration: none;
+		display: inline-block;
+		font-size: 16px;
+		margin: 4px 2px;
+		-webkit-transition-duration: 0.4s; /* Safari */
+		transition-duration: 0.4s;
+		cursor: pointer;
+	}
+	
+	.click {
+		cursor: pointer;
+		}
+
+
+	.button1 {
+		background-color: white;
+		color: black;
+		border: 2px solid #4CAF50;
+	}
+
+	.button1:hover {
+		background-color: #4CAF50;
+		color: white;
+	}
+	
+	.centerAlign {
+		vertical-align: bottom;
+	}
+	
+	.bdisabled {
+		cursor: not-allowed;
+	}
+	
+	.smallt {
+		font-size: 50%
+	}
+	
+	.smallm {
+		font-size: 80%
+	}
+
+
 </style>
 
 <body>
 	<center>
+		<img src="sCookie.png" id="sCookie" class="sCookie"></img>
 		<div>
 			<h1>Cookie Clicker</h1>
-			<p><text id="cookiess">0 cookies!</text></p>
+			<p class="smallm"><text id="cookiess">0 cookies!</text></p>
+			<p class="smallt"><text id="cpc">1 cookie</text> per click!</p>
 		</div>
 	</center>
 	<div class="right">
 		<center>
 			<h3>Shop</h3>
-			<p>Farm price: <text id="farmCost">20</text></p>
-			<p>Mine price: <text id="mineCost">50</text></p>
 			<table>
-				<tr><td><img id="farmShop" src="farm.png"></td></tr>
-				<tr><td><img id="mineShop" src="mine.png"></td></tr>
+				<tr><td><img id="farmShop" class="click centerAlign" src="farm.png"></td><td><img id="mineShop" class="click" src="mine.png"></td></tr>
+				<tr><td><center><text id="farmCost">20</text></center></td><td><center><text id="mineCost">50</text></center></td></tr>
 			</table>
+			<button class="button bdisabled" id="cFarms" onClick="doNothing()">Give 1 farm.</button>
+			<button class="button bdisabled" id="cMines" onClick="doNothing()">Give 1 mine.</button>
+			<button class="button bdisabled" id="cCookies" onClick="doNothing()">Give 10K cookies.</button>
 		</center>
 	</div>
 	<div class="left">
@@ -91,6 +147,8 @@
 		<h3>Items</h3>
 		<p>You have <text id="totalFarms">0</text><text id="grFarms"> farms!</text></p>
 		<p>You have <text id="totalMines">0</text><text id="grMines"> mines!</text></p>
+		<button class="button button1" onClick="cheatCodes()">Activate cheats.</button>
+		<button class="button button1" onClick="clearCookies()">Delete all cookies.</button>
 		</center>
 	</div>
 	<p></p>
@@ -110,9 +168,60 @@
 	var mines = 0;
 	var farms = 0;
 	var cookiesPerSecond = 0;
+	var extraCookies = 1;
+	var cookiesPerClick = extraCookies + 1;
+	
+	function give(){
+		editCookies(150000000);
+	}
+	
+	function cheatCodes(){
+	var cheats = prompt("Enter cheat code:");
+	if(cheats == "suh dude"){
+		alert("Cheats activated");
+		$("#cFarms").removeClass("bdisabled").attr("onClick", "giveFarms()");
+		$("#cMines").removeClass("bdisabled").attr("onClick", "giveMines()");
+		$("#cCookies").removeClass("bdisabled").attr("onClick", "giveCookies()");
+		
+	}
+	else{
+	alert("Wrong cheat code!");
+	}
+}
+	
+	function giveFarms(){
+		farms += 1;
+		$("#totalFarms").html(farms);
+		extraCookies += 1;
+		$("#cpc").html(extraCookies + " cookies");
+	}
+	
+	function giveMines(){
+		mines += 1;
+		$("#totalMines").html(mines);
+		extraCookies += 2;
+		$("#cpc").html(extraCookies + " cookies");
+	}
+	
+	function giveCookies(){
+		editCookies(10000);
+		$("#cookiess").html(cookiesInBank + " cookies!")
+	}
+
 	
 	function doNothing(){
 		console.log("doing nothing");
+	}
+	
+	function clearCookies(){
+		var deleteAllCookies = confirm("Are you sure you want to delete all cookies? This action cannot be reversed.")
+		if(deleteAllCookies == true){
+			cookiesInBank = 0;
+			$("#cookiess").html(cookiesInBank + " cookies!");
+			}
+		else{
+			doNothing();
+		}
 	}
 	
 	function wait(ms){
@@ -125,37 +234,55 @@
 	function animateCookie(){
 		$("#cookie").animate({
 		width: "300px"
-		}, 75);
+		}, 50);
 		
 		$("#cookie").animate({
 			width: "500px"
-		}, 75);
+		}, 50);
 	}
 		
 	function editCookies(value){
 		cookiesInBank += value;
 		$("#cookiess").html(cookiesInBank + " cookies!");
 	}
-	
-			setInterval(function(){
-			if(cookiesPerSecond < 0){
-				animateCookie();
-				editCookies(cookiesPerSecond);
-			}
-			else{
-				doNothing();
-			}
-				
-			}, 1000);
-		
-		
-		
+
 	
 	$("#cookie").click(function(){
 		animateCookie();
-		cookiesInBank += Math.floor(1+farms*2 + mines*3);
-		$("#cookiess").html(cookiesInBank + " cookies!");
+		cookiesInBank += extraCookies;
+		$("#title").html(cookiesInBank + " cookies!")
+		if(cookiesInBank == 1){
+			$("#cookiess").html(cookiesInBank + " cookie!");
+		}
+		else{
+			$("#cookiess").html(cookiesInBank + " cookies!");
+			}
 	});	
+	
+	$("#sCookie").click(function(){
+	var areyousureaboutthat = confirm("Are you sure about that?");
+		if(areyousureaboutthat == true){
+			if(cookiesInBank >=15000000) {
+				editCookies(-15000000)
+				$("#cookiess").html("Superclicks activated. " + cookiesInBank + " cookies left.");
+				mines += 10000;
+				farms += 10000;
+				minePrice = 0;
+				farmPrice = 0;
+				$("#farmCost").html(farmPrice);
+				$("#totalFarms").html(farms);
+				$("#mineCost").html(minePrice);
+				$("#totalMines").html(mines);
+			}
+			else{
+				$("#cookiess").html("You need " + Math.floor(15000000 - cookiesInBank) + " more cookies to continue.");
+			}
+		}
+		else{
+		doNothing();
+		}
+	}	
+);
 	
 	$("#farmShop").click(function(){
 			if(cookiesInBank >= farmPrice){
@@ -164,7 +291,14 @@
 			farmPrice = Math.floor(farmPrice * 1.6);
 			$("#farmCost").html(farmPrice);
 			$("#totalFarms").html(farms);
-			cookiesPerSecond = 0.1;
+			extraCookies += 1;
+			$("#cpc").html(extraCookies + " cookies");
+			if(cookiesInBank == 1){
+			$("#cookiess").html("Purchase successful! You now have 1 cookie!");
+			}
+			else{
+			$("#cookiess").html("Purchase successful! You now have " + cookiesInBank + " cookies!");
+			}
 			if(farms == 1){
 				$("#grFarms").html(" farm!");
 			}
@@ -182,10 +316,17 @@
 		if(cookiesInBank >= minePrice){
 			mines += 1;
 			editCookies(-1*minePrice);
+			extraCookies += 2;
 			minePrice = Math.floor(minePrice * 2);
 			$("#mineCost").html(minePrice);
 			$("#totalMines").html(mines);
-			cookiesPerSecond = 0.4;
+			$("#cpc").html(extraCookies + " cookies");
+			if(cookiesInBank == 1){
+			$("#cookiess").html("Purchase successful! You now have 1 cookie!");
+			}
+			else{
+			$("#cookiess").html("Purchase successful! You now have " + cookiesInBank + " cookies!");
+			}
 			if(mines == 1){
 				$("#grMines").html(" mine!");
 			}
