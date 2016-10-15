@@ -1,0 +1,186 @@
+<html>
+
+<head>
+<meta charset=”utf-8? />
+<meta name=”format-detection” content=”telephone=no” />
+<meta name=”msapplication-tap-highlight” content=”no” />
+<meta name=”viewport” content=”user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width” />
+<meta http-equiv=”Content-Security-Policy” content=”default-src * ‘unsafe-inline’; style-src ‘self’ ‘unsafe-inline’; media-src *” />
+<link rel="icon" href="icon.png">
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js"></script>
+<title>Cookie Clicker</title>
+
+</head>
+
+<style>
+	body{
+		font-size: 200%;
+	}
+	.game{
+		height: 25vw;
+		width: 25vw;
+	}
+	
+	table, td, tr {
+		border: 1px solid black;
+	}
+	
+	.clickable{
+		background-color: blue;
+	}
+	
+	.superClickable{
+		background-color: red;
+	}
+	
+	.ui-btn{
+		font-size: 200%;
+	}
+	
+	.cookie{
+		max-width:25%;
+		height:auto;
+	}
+
+	.sCookie{
+		max-width:25%;
+		height:auto;
+	}
+	
+	.right {
+		position: absolute;
+		right: 0px;
+		width: 300px;
+		border: 3px solid #befc14;
+		padding: 10px;
+	}
+	
+	.left {
+		position: absolute;
+		left: 0px;
+		width: 300px;
+		border: 3px solid #befc14;
+		padding: 10px;
+	}
+	
+</style>
+
+<body>
+	<center>
+		<div>
+			<h1>Cookie Clicker</h1>
+			<p><text id="cookiess">0 cookies!</text></p>
+		</div>
+	</center>
+	<div class="right">
+		<center>
+			<h3>Shop</h3>
+			<p>Farm price: <text id="farmCost">20</text></p>
+			<p>Mine price: <text id="mineCost">50</text></p>
+			<table>
+				<tr><td><img id="farmShop" src="farm.png"></td></tr>
+				<tr><td><img id="mineShop" src="mine.png"></td></tr>
+			</table>
+		</center>
+	</div>
+	<div class="left">
+		<center>
+		<h3>Items</h3>
+		<p>You have <text id="totalFarms">0</text><text id="grFarms"> farms!</text></p>
+		<p>You have <text id="totalMines">0</text><text id="grMines"> mines!</text></p>
+		</center>
+	</div>
+	<p></p>
+		<center>
+		<div>
+			<img src="cookie.png" id="cookie" class="cookie"></img>
+		</div>
+	</center>	
+		
+</body>
+
+<script>
+
+	var cookiesInBank = 0;
+	var farmPrice = 20;
+	var minePrice = 50;
+	var mines = 0;
+	var farms = 0;
+	
+	function doNothing(){
+		console.log("doing nothing");
+	}
+	
+	function wait(ms){
+	   var start = new Date().getTime();
+	   var end = start;
+	   while(end < start + ms) {
+		 end = new Date().getTime();
+	  }
+	}
+	function animateCookie(){
+		$("#cookie").animate({
+		width: "300px"
+		}, 75);
+		
+		$("#cookie").animate({
+			width: "500px"
+		}, 75);
+	}
+		
+	function editCookies(value){
+		cookiesInBank += value;
+		$("#cookiess").html(cookiesInBank + " cookies!");
+	}
+	
+	$("#cookie").click(function(){
+		animateCookie();
+		cookiesInBank += (1+farms*2 + mines*3);
+		$("#cookiess").html(cookiesInBank + " cookies!");
+	});	
+	
+	$("#farmShop").click(function(){
+			if(cookiesInBank >= farmPrice){
+			farms += 1;
+			editCookies(-1*farmPrice);
+			farmPrice = Math.floor(farmPrice * 1.6);
+			$("#farmCost").html(farmPrice);
+			$("#totalFarms").html(farms);
+			if(farms == 1){
+				$("#grFarms").html(" farm!");
+			}
+			else{
+				$("#grFarms").html(" farms!");
+			}
+			
+			}
+		else{
+			$("#cookiess").html("You don't have enough cookies! You have " + cookiesInBank + " cookies!");
+			}
+	});
+		
+	$("#mineShop").click(function(){
+		if(cookiesInBank >= minePrice){
+			mines += 1;
+			editCookies(-1*minePrice);
+			minePrice = Math.floor(minePrice * 2);
+			$("#mineCost").html(minePrice);
+			$("#totalMines").html(mines);
+			if(mines == 1){
+				$("#grMines").html(" mine!");
+			}
+			else{
+				$("#grMines").html(" mines!");
+			}
+		}
+		else{
+			$("#cookiess").html("You don't have enough cookies! You have " + cookiesInBank + " cookies!");
+		}
+	});
+		
+
+</script>
+
+</html>
