@@ -139,7 +139,7 @@
 			</table>
 			<button class="button bdisabled" id="cFarms" onClick="doNothing()">Give 1 farm.</button>
 			<button class="button bdisabled" id="cMines" onClick="doNothing()">Give 1 mine.</button>
-			<button class="button bdisabled" id="cCookies" onClick="doNothing()">Give 10K cookies.</button>
+			<button class="button bdisabled" id="cCookies" onClick="doNothing()">Give some cookies.</button>
 		</center>
 	</div>
 	<div class="left">
@@ -147,7 +147,7 @@
 		<h3>Items</h3>
 		<p>You have <text id="totalFarms">0</text><text id="grFarms"> farms!</text></p>
 		<p>You have <text id="totalMines">0</text><text id="grMines"> mines!</text></p>
-		<button class="button button1" onClick="cheatCodes()">Activate cheats.</button>
+		<button class="button button1" id="cheatButton" onClick="cheatCodes()">Activate cheats.</button>
 		<button class="button button1" onClick="clearCookies()">Delete all cookies.</button>
 		</center>
 	</div>
@@ -170,44 +170,82 @@
 	var cookiesPerSecond = 0;
 	var extraCookies = 1;
 	var cookiesPerClick = extraCookies + 1;
+	var cheatsNotActivated = true;
+	var superPrice = 15000;
 	
 	function give(){
 		editCookies(150000000);
 	}
 	
 	function cheatCodes(){
-	var cheats = prompt("Enter cheat code:");
-	if(cheats == "suh dude"){
-		alert("Cheats activated");
-		$("#cFarms").removeClass("bdisabled").attr("onClick", "giveFarms()");
-		$("#cMines").removeClass("bdisabled").attr("onClick", "giveMines()");
-		$("#cCookies").removeClass("bdisabled").attr("onClick", "giveCookies()");
+	if(cheatsNotActivated == true){
+		var cheats = prompt("Enter cheat code:");
+		if(cheats == "suh dude"){
+			alert("Cheats activated");
+			cheatsNotActivated = false;
+			$("#cFarms").removeClass("bdisabled").attr("onClick", "giveFarms()");
+			$("#cMines").removeClass("bdisabled").attr("onClick", "giveMines()");
+			$("#cCookies").removeClass("bdisabled").attr("onClick", "giveCookies()");
+			$("#cheatButton").html("Deactivate cheats.");
 		
+		}
+		else{
+		alert("Cheats not activated.");
+		}
 	}
 	else{
-	alert("Wrong cheat code!");
+		alert("Cheats have now been deactivated");
+		cheatsNotActivated = true;
+		$("#cFarms").addClass("bdisabled").attr("onClick", "doNothing()");
+		$("#cMines").addClass("bdisabled").attr("onClick", "doNothing()");
+		$("#cCookies").addClass("bdisabled").attr("onClick", "doNothing()");
+		$("#cheatButton").html("Activate cheats.");
 	}
 }
+	
 	
 	function giveFarms(){
 		farms += 1;
 		$("#totalFarms").html(farms);
 		extraCookies += 1;
 		$("#cpc").html(extraCookies + " cookies");
+		farmPrice = Math.floor(farmPrice * 1.2);
+		$("#farmCost").html(farmPrice);
 	}
+	
 	
 	function giveMines(){
 		mines += 1;
 		$("#totalMines").html(mines);
 		extraCookies += 2;
 		$("#cpc").html(extraCookies + " cookies");
+		minePrice = Math.floor(minePrice * 1.35);
+		$("#mineCost").html(minePrice);
 	}
 	
 	function giveCookies(){
-		editCookies(10000);
-		$("#cookiess").html(cookiesInBank + " cookies!")
+		var amountOfCookies = prompt("Enter amount of cookies you wish to recieve. NUMBERS ONLY!");
+		if(amountOfCookies != null){
+			editCookies(Math.floor(amountOfCookies));
+			if(amountOfCookies == 1){
+				alert("1 cookie has been added to your total cookies!");
+				$("#cookiess").html(cookiesInBank + " cookies!");
+			}
+			else{
+				alert(amountOfCookies + " cookies have been added to your total cookies!");
+				$("#cookiess").html(cookiesInBank + " cookies!");
+			}
+			
+		}
+		else{
+			alert("No cookies added.");
+			}
+	}	
+	
+	function testPrompt(){
+		var testCookies = prompt("Enter a number");
+		editCookies(Math.floor(testCookies));
 	}
-
 	
 	function doNothing(){
 		console.log("doing nothing");
@@ -251,31 +289,43 @@
 		animateCookie();
 		cookiesInBank += extraCookies;
 		$("#title").html(cookiesInBank + " cookies!")
+		if(cookiesInBank == NaN){
+			cookiesInBank = 0;
+			$("#cookiess").html("You had a bug, which has now been fixed. Your cookies have been removed.");
+		}
+		else{
+		doNothing();
+		}
 		if(cookiesInBank == 1){
 			$("#cookiess").html(cookiesInBank + " cookie!");
 		}
 		else{
 			$("#cookiess").html(cookiesInBank + " cookies!");
 			}
+		
 	});	
 	
 	$("#sCookie").click(function(){
 	var areyousureaboutthat = confirm("Are you sure about that?");
 		if(areyousureaboutthat == true){
-			if(cookiesInBank >=15000000) {
-				editCookies(-15000000)
+			if(cookiesInBank >=superPrice) {
+				editCookies(-superPrice)
 				$("#cookiess").html("Superclicks activated. " + cookiesInBank + " cookies left.");
-				mines += 10000;
-				farms += 10000;
-				minePrice = 0;
-				farmPrice = 0;
+				mines += Math.floor(superPrice / 1000);
+				farms += Math.floor(superPrice / 500);
+				extraCookies += Math.floor(superPrice / 1000 * 2);
+				extraCookies += Math.floor(superPrice / 500 * 2);
+				minePrice = Math.floor(minePrice / 3);
+				farmPrice = Math.floor(farmPrice / 4);
+				superPrice = superPrice * 4;
 				$("#farmCost").html(farmPrice);
 				$("#totalFarms").html(farms);
 				$("#mineCost").html(minePrice);
 				$("#totalMines").html(mines);
+				$("#cpc").html(extraCookies + " cookies");
 			}
 			else{
-				$("#cookiess").html("You need " + Math.floor(15000000 - cookiesInBank) + " more cookies to continue.");
+				$("#cookiess").html("You need " + Math.floor(superPrice - cookiesInBank) + " more cookies to continue.");
 			}
 		}
 		else{
@@ -288,7 +338,7 @@
 			if(cookiesInBank >= farmPrice){
 			farms += 1;
 			editCookies(-1*farmPrice);
-			farmPrice = Math.floor(farmPrice * 1.6);
+			farmPrice = Math.floor(farmPrice * 1.2);
 			$("#farmCost").html(farmPrice);
 			$("#totalFarms").html(farms);
 			extraCookies += 1;
@@ -317,7 +367,7 @@
 			mines += 1;
 			editCookies(-1*minePrice);
 			extraCookies += 2;
-			minePrice = Math.floor(minePrice * 2);
+			minePrice = Math.floor(minePrice * 1.35);
 			$("#mineCost").html(minePrice);
 			$("#totalMines").html(mines);
 			$("#cpc").html(extraCookies + " cookies");
